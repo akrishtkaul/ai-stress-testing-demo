@@ -1,0 +1,13 @@
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/dto/CreateOrderRequest.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/repository/ProductRepository.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/repository/OrderRepository.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/entity/Product.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/service/OrderService.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/entity/Order.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/entity/OrderItem.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/service/ProductService.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/controller/OrderController.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/dto/AddItemRequest.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/seeder/DataSeeder.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/InventoryApiApplication.java
+/Users/akrishtkaul/ai-stress-test-demo/ai-stress-testing-demo/inventory-api/src/main/java/com/demo/inventoryapi/controller/ProductController.java
