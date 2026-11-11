@@ -23,7 +23,9 @@ inventory-api/
 ├── pom.xml
 ├── README.md
 ├── IMPLEMENTATION.md                          ← this file
-├── prompts/                                   ← empty, demo prompts go here
+├── prompts/
+│   ├── 01-stress-test.md                      ← prompt 1: write + run simulation, diagnose
+│   └── 02-fix.md                              ← prompt 2: apply fixes and rerun
 └── src/
     ├── main/
     │   ├── java/com/demo/inventoryapi/
@@ -106,10 +108,10 @@ Under many concurrent clients, requests queue waiting for a connection and time 
 ### Bottleneck 2 — Unindexed prefix search
 **Location:** `ProductRepository.java` + `Product.java` (no `@Index` on `name`)
 ```java
-@Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT(:prefix, '%'))")
+@Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT(:prefix, '%') ORDER BY p.name")
 List<Product> findByNamePrefix(@Param("prefix") String prefix, Pageable pageable);
 ```
-With 200,000 rows and no index, every search causes a full table scan.
+With 200,000 rows and no index, every search causes a full table scan. The query is case-sensitive with `ORDER BY` so that adding an index on `name` during the live fix will visibly eliminate the scan (a `LOWER()` wrap would prevent the index from being used).
 
 ---
 
@@ -142,9 +144,11 @@ Actuator endpoints exposed:
 ```
 GET /actuator/health
 GET /actuator/metrics/hikaricp.connections.pending
+GET /actuator/metrics/hikaricp.connections.timeout
+GET /actuator/metrics/hikaricp.connections.max
 ```
 
-The `hikaricp.connections.pending` metric is the key signal during the demo — it spikes when the pool is exhausted under load.
+`hikaricp.connections.timeout` counts how many requests timed out waiting for a connection — the primary signal of pool exhaustion during the demo.
 
 ---
 
@@ -183,7 +187,6 @@ mvn gatling:test
 ## What Is NOT Done Yet (intentional)
 
 - `FlashSaleSimulation.java` — the AI writes this live during the demo
-- Prompts in `prompts/` — added during demo
 - Bottleneck fixes — applied live by the AI after diagnosing the report
 
 ---
@@ -191,8 +194,7 @@ mvn gatling:test
 ## Demo Flow (context)
 
 1. Show slide: how you'd stress test manually (hand-write a Gatling simulation)
-2. Live: ask the AI — *"Write a Gatling simulation of a flash sale with 200 shoppers ramping up over 60 seconds, where each shopper searches for a product, views it, creates an order, and adds an item. Run it and tell me what's wrong."*
-3. AI runs `mvn gatling:test`, reads the HTML report and `/actuator/metrics/hikaricp.connections.pending`, diagnoses both bottlenecks
-4. Show "before" report (p99 spikes, timeouts)
-5. AI applies fixes (pool size → 50, add `@Index` on `Product.name`), reruns
-6. Show "after" report side by side
+2. Live: paste `prompts/01-stress-test.md` into Claude Code — it writes `FlashSaleSimulation.java`, runs `mvn gatling:test`, checks Hikari metrics, and diagnoses both bottlenecks
+3. Show "before" report details — p99 spikes, timeouts, pool exhaustion count
+4. Paste `prompts/02-fix.md` — AI applies fixes (pool size → 50, `@Index` on `Product.name`), you restart, it reruns
+5. Show "after" report side by side
